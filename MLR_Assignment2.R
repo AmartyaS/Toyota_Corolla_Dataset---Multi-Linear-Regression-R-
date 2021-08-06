@@ -1,0 +1,30 @@
+install.packages("MASS")
+install.packages("car")
+install.packages("psych")
+library("psych")
+library("car")
+library("MASS")
+data <- read.csv(file.choose())
+View(data)
+attach(data)
+new <- data[,c("Price","Age_08_04","KM","HP","cc","Doors","Gears","Quarterly_Tax","Weight")]
+new
+View(new)
+pairs.panels(new)
+attach(new)
+model <- lm(Price~.,data = new[c(-81,-222,-961), ])
+summary(model)
+plot(model)
+avPlots(model, id.n=5,id.cex=0.8)
+vif(model)
+stepAIC(model)
+confint(model,level = 0.95) 
+pred <- predict(model,interval = "predict") 
+prediction <- as.data.frame(pred)
+View(prediction)
+Predicted_values <- prediction$Predicted_Values
+View(Predicted_values)
+?colnames
+colnames(prediction) <- c("Predicted_Values")
+write.csv(Predicted_values,"Prediction.csv")
+Predicted_values
